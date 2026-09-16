@@ -8,11 +8,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Set up JDK 21
+      - name: Set up JDK 21 (Gradle Runner)
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
+
+      - name: Set up JDK 25 (Minecraft Requirement)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'oracle'
 
       - name: Setup Gradle 8.8
         uses: gradle/actions/setup-gradle@v3
