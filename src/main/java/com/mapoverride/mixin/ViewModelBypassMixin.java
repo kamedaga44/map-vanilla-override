@@ -10,13 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(
-    targets = {
-        "com.viewmodel.mixin.HeldItemTransformMixin",
-        "com.viewmodel.mixin.HeldItemModelTransformMixin"
-    },
-    remap = false
-)
+@Mixin(value = Object.class, remap = false)
 public class ViewModelBypassMixin {
 
     @Inject(method = "onApplyTransforms", at = @At("HEAD"), cancellable = true, require = 0)
