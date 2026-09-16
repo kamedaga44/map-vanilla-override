@@ -22,18 +22,17 @@ public class ViewModelBypassMixin {
     @Inject(method = "onApplyTransforms", at = @At("HEAD"), cancellable = true, require = 0)
     private static void bypassMapTransforms(ItemStack stack, Hand hand, MatrixStack matrices, CallbackInfo ci) {
         if (stack != null && !stack.isEmpty()) {
-            // 1. バニラ通常の地図判定
+            // 1. バニラ地図判定
             boolean isVanillaMap = stack.isOf(Items.FILLED_MAP) || stack.getItem() instanceof FilledMapItem;
 
-            // 2. アイテムの表示名判定（「Magical Map」や名前に「Map」が入っているもの）
+            // 2. 名前・ID判定 ("map", "paper" 等を含むか)
             String displayName = stack.getName().getString().toLowerCase();
-            boolean isMapName = displayName.contains("map");
-
-            // 3. アイテムID文字列判定
             String itemId = stack.getItem().toString().toLowerCase();
-            boolean isMapId = itemId.contains("map");
+            
+            boolean isMapLike = displayName.contains("map") || itemId.contains("map") || itemId.contains("paper");
 
-            if (isVanillaMap || isMapName || isMapId) {
+            if (isVanillaMap || isMapLike) {
+                // View Model Customizer の拡大・回転などの操作を完全にキャンセル
                 ci.cancel();
             }
         }
