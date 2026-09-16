@@ -8,31 +8,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 25
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '25'
-          distribution: 'oracle'
+          java-version: '21'
+          distribution: 'temurin'
 
-      - name: Direct Class Compilation
-        run: |
-          mkdir -p bin/com/mapoverride/mixin
-          
-          # 依存関係エラーを無視して直接ダミーコンパイルを実行
-          javac --limit-modules java.base -d bin src/main/java/com/mapoverride/mixin/ViewModelBypassMixin.java || true
-          
-          # 設定ファイルを正しい場所に配置
-          cp src/main/resources/fabric.mod.json bin/
-          cp src/main/resources/map_vanilla_override.mixins.json bin/
-          
-          # jarパッケージの作成
-          cd bin
-          jar cvf map-vanilla-override-1.0.0.jar .
-          mkdir -p ../out
-          mv map-vanilla-override-1.0.0.jar ../out/
+      - name: Setup Gradle 8.8
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.8'
+
+      - name: Build with Gradle
+        run: gradle build -Dorg.gradle.java.home=$JAVA_HOME
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: map-vanilla-override-1.0.0
-          path: out/*.jar
+          path: build/libs/*.jar
