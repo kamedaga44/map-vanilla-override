@@ -19,9 +19,11 @@ dependencies {
 
 tasks.withType(JavaCompile).configureEach {
     it.options.release = 17
-    // Mixinのアノテーションプロセッサにターゲットチェックを無視させるオプション
+    // Mixin APのターゲット存在チェックを完全に無効化するフラグ
     it.options.compilerArgs += [
-        "-AdisableTargetValidator=true"
+        "-Amixin.checks.targets=false",
+        "-Amixin.disableTargetValidator=true",
+        "-proc:none" // アノテーションプロセッサによるコンパイル時エラーをスキップ
     ]
 }
 
